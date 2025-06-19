@@ -1,15 +1,15 @@
 local Modules = {
     Colors = {
-        ["Red"] = "255,0,0", ["Green"] = "0,255,0", ["Blue"] = "0,0,255",
-        ["Cyan"] = "33,161,163", ["Magenta"] = "255,0,255", ["Yellow"] = "255,255,0",
-        ["Orange"] = "255,165,0", ["Purple"] = "128,0,128", ["Pink"] = "255,105,180",
-        ["White"] = "255,255,255", ["Black"] = "0,0,0", ["Gray"] = "128,128,128",
-        ["Lime"] = "50,205,50", ["Teal"] = "0,128,128", ["Indigo"] = "75,0,130", ["Brown"] = "139,69,19",
-        ["LightRed"] = "255,102,102", ["LightGreen"] = "144,238,144", ["LightBlue"] = "173,216,230",
-        ["LightCyan"] = "224,255,255", ["LightMagenta"] = "238,130,238", ["LightYellow"] = "255,255,224",
-        ["LightOrange"] = "255,200,124", ["LightPurple"] = "216,191,216", ["LightPink"] = "255,182,193",
-        ["LightGray"] = "211,211,211", ["LightLime"] = "204,255,144", ["LightTeal"] = "144,224,224",
-        ["LightIndigo"] = "191,148,228", ["LightBrown"] = "210,180,140"
+        Red = "255,0,0", Green = "0,255,0", Blue = "0,0,255",
+        Cyan = "33,161,163", Magenta = "255,0,255", Yellow = "255,255,0",
+        Orange = "255,165,0", Purple = "128,0,128", Pink = "255,105,180",
+        White = "255,255,255", Black = "0,0,0", Gray = "128,128,128",
+        Lime = "50,205,50", Teal = "0,128,128", Indigo = "75,0,130", Brown = "139,69,19",
+        LightRed = "255,102,102", LightGreen = "144,238,144", LightBlue = "173,216,230",
+        LightCyan = "224,255,255", LightMagenta = "238,130,238", LightYellow = "255,255,224",
+        LightOrange = "255,200,124", LightPurple = "216,191,216", LightPink = "255,182,193",
+        LightGray = "211,211,211", LightLime = "204,255,144", LightTeal = "144,224,224",
+        LightIndigo = "191,148,228", LightBrown = "210,180,140"
     }
 }
 
@@ -39,6 +39,12 @@ Modules.ChangeColor = function()
 end
 
 Modules.ClearOwnLogs = function()
+    local keep = {
+        WindowingPadding = true,
+        LogHeader = true,
+        Layout = true
+    }
+
     local log = game:GetService("CoreGui"):FindFirstChild("DevConsoleMaster")
     if not log then return end
     log = log:FindFirstChild("DevConsoleWindow")
@@ -50,16 +56,17 @@ Modules.ClearOwnLogs = function()
     log = log:FindFirstChild("ClientLog")
     if not log then return end
 
-    for _, label in pairs(log:GetDescendants()) do
-        if label:IsA("Frame") and label.Name ~= "WindowingPadding" then
-            label:Destroy()
+    for _, child in pairs(log:GetDescendants()) do
+        if not keep[child.Name] and (child:IsA("Frame") or child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("ScrollingFrame")) then
+            child:Destroy()
         end
     end
 end
 
 local function Print(color, text, size, overwrite)
-    if not Modules.Colors[color] then
-        warn("Color was not found!")
+    local rgb = Modules.Colors[color] or color
+    if not rgb:match("^%d+,%d+,%d+$") then
+        warn("Invalid color: must be a name or 'R,G,B'")
         return
     end
 
@@ -67,7 +74,7 @@ local function Print(color, text, size, overwrite)
         Modules.ClearOwnLogs()
     end
 
-    local formatted = '<font color="rgb(' .. Modules.Colors[color] .. ')"'
+    local formatted = '<font color="rgb(' .. rgb .. ')"'
     if size then
         formatted = formatted .. ' size="' .. tostring(size) .. '"'
     end
