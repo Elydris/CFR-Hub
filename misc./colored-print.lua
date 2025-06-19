@@ -51,9 +51,7 @@ Modules.ClearOwnLogs = function()
     if not log then return end
 
     for _, label in pairs(log:GetDescendants()) do
-        if label:IsA("TextLabel") or label:IsA("Frame") then
-            label:Destroy()
-        end
+        label:Destroy()
     end
 end
 
