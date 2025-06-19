@@ -15,17 +15,17 @@ local Modules = {
 
 Modules.ChangeColor = function()
     game:GetService("RunService").Heartbeat:Connect(function()
-        local clientLog = game:GetService("CoreGui"):FindFirstChild("DevConsoleMaster")
-        if clientLog then
-            clientLog = clientLog:FindFirstChild("DevConsoleWindow")
-            if clientLog then
-                clientLog = clientLog:FindFirstChild("DevConsoleUI")
-                if clientLog then
-                    clientLog = clientLog:FindFirstChild("MainView")
-                    if clientLog then
-                        clientLog = clientLog:FindFirstChild("ClientLog")
-                        if clientLog then
-                            for _, v in pairs(clientLog:GetDescendants()) do
+        local log = game:GetService("CoreGui"):FindFirstChild("DevConsoleMaster")
+        if log then
+            log = log:FindFirstChild("DevConsoleWindow")
+            if log then
+                log = log:FindFirstChild("DevConsoleUI")
+                if log then
+                    log = log:FindFirstChild("MainView")
+                    if log then
+                        log = log:FindFirstChild("ClientLog")
+                        if log then
+                            for _, v in pairs(log:GetDescendants()) do
                                 if v:IsA("TextLabel") then
                                     v.RichText = true
                                 end
@@ -57,7 +57,7 @@ Modules.ClearOwnLogs = function()
     end
 end
 
-Modules.print = function(color, text, size, overwrite)
+local function Print(color, text, size, overwrite)
     if not Modules.Colors[color] then
         warn("Color was not found!")
         return
@@ -76,3 +76,5 @@ Modules.print = function(color, text, size, overwrite)
 end
 
 Modules.ChangeColor()
+
+return Print
