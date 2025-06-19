@@ -51,7 +51,9 @@ Modules.ClearOwnLogs = function()
     if not log then return end
 
     for _, label in pairs(log:GetDescendants()) do
-        label:Destroy()
+        if label:IsA("Frame") and label.Name ~= "WindowingPadding" then
+            label:Destroy()
+        end
     end
 end
 
